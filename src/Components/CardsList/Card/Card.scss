@@ -1,0 +1,57 @@
+.Card {
+	width: 502px;
+	height: 184px;
+	background-color: white;
+	border-radius: 5px;
+	position: relative;
+	margin-bottom: 20px;
+	box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
+
+	text-align: left;
+
+	&__header {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+
+		margin-bottom: 20px;
+	}
+
+	&__price {
+		font-size: 24px;
+		font-weight: 600;
+		color: rgba(33, 150, 243, 1);
+
+		margin-top: 26px;
+		margin-left: 20px;
+	}
+
+	&__company-logo {
+		margin-top: 20px;
+		margin-right: 20px;
+		display: inline-block;
+		margin-left: auto;
+	}
+
+	.card-row {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		padding-left: 20px;
+		margin-bottom: 20px;
+
+		.card-column {
+			display: grid;
+
+			&__gray {
+				font-weight: 600;
+				font-size: 12px;
+				color: rgba(160, 176, 185, 1);
+			}
+
+			&__black {
+				font-weight: 600;
+				font-size: 14px;
+				color: rgba(74, 74, 74, 1);
+			}
+		}
+	}
+}

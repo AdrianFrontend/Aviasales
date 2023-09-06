@@ -9,8 +9,15 @@ const instance = axios.create({
 });
 
 export const API = {
-	getSearchId() {
-		return instance.get("https://aviasales-test-api.kata.academy/search").then((r) => r.data);
+	searchId: null,
+
+	async getSearchId() {
+		if (this.searchId) {
+			return this.searchId;
+		} else {
+			await instance.get("https://aviasales-test-api.kata.academy/search").then((r) => (this.searchId = r.data));
+			return this.searchId;
+		}
 	},
 	getTickets(searchId) {
 		return instance.get(`https://aviasales-test-api.kata.academy/tickets?searchId=${searchId}`).then((r) => r.data);

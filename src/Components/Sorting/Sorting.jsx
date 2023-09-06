@@ -51,7 +51,7 @@ const Sorting = ({ sorting, filters, toggleTheCheapest, toggleTheFastest, toggle
 
 Sorting.propTypes = {
 	sorting: PropTypes.string,
-	filters: PropTypes.array,
+	filters: PropTypes.object,
 	toggleTheCheapest: PropTypes.func,
 	toggleTheFastest: PropTypes.func,
 	toggleOptimal: PropTypes.func,

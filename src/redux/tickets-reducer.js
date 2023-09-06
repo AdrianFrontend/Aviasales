@@ -4,24 +4,27 @@ const UPDATE_TICKETS = "UPDATE-TICKETS";
 const SORT_TICKETS = "SORT-TICKETS";
 const STOP = "STOP";
 const FILTER_TICKETS = "FILTER-TICKETS";
+const SET_ERROR = "SET-ERROR";
 
 let initialState = {
 	tickets: [],
 	sortedTickets: [],
-	filteredTickets: [],
+	filteredTickets: null,
 	loading: true,
+	haveMore: true,
 };
 
 const ticketsReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case UPDATE_TICKETS: {
-			let allTickets = [...structuredClone(state.sortedTickets)];
-			let newAllTickets = [...allTickets, ...action.tickets];
+			let newAllTickets = [...state.sortedTickets, ...action.tickets];
 
 			return {
 				tickets: newAllTickets,
 				sortedTickets: newAllTickets,
+				filteredTickets: state.filteredTickets,
 				loading: true,
+				haveMore: state.haveMore,
 			};
 		}
 		case SORT_TICKETS: {
@@ -37,8 +40,9 @@ const ticketsReducer = (state = initialState, action) => {
 			return {
 				tickets: state.tickets,
 				sortedTickets: allTicketsCopy,
-				filteredTickets: state.filteredTickets,
-				loading: true,
+				filteredTickets: allTicketsCopy,
+				loading: false,
+				haveMore: state.haveMore,
 			};
 		}
 		case FILTER_TICKETS: {
@@ -90,12 +94,20 @@ const ticketsReducer = (state = initialState, action) => {
 				sortedTickets: state.sortedTickets,
 				filteredTickets: filteredTickets,
 				loading: false,
+				haveMore: state.haveMore,
 			};
 		}
 		case STOP: {
 			return {
 				...state,
 				loading: false,
+				haveMore: false,
+			};
+		}
+		case SET_ERROR: {
+			return {
+				...state,
+				error: true,
 			};
 		}
 		default:
@@ -106,28 +118,24 @@ const ticketsReducer = (state = initialState, action) => {
 export const updateTickets = (tickets) => ({ type: UPDATE_TICKETS, tickets });
 export const sortTickets = (method) => ({ type: SORT_TICKETS, method });
 export const filterTickets = (filters) => ({ type: FILTER_TICKETS, filters });
+export const setError = () => ({ type: SET_ERROR });
 const stop = () => ({ type: STOP });
 
 export const getTicketsThunk = () => async (dispatch) => {
 	const searchId = await API.getSearchId();
 
-	function recursiveGetTickets() {
-		API.getTickets(searchId.searchId)
-			.then((responce) => {
-				dispatch(updateTickets(responce.tickets));
+	API.getTickets(searchId.searchId)
+		.then((responce) => {
+			dispatch(updateTickets(responce.tickets));
 
-				if (responce.stop) {
-					dispatch(stop());
-					return;
-				}
-				recursiveGetTickets();
-			})
-			.catch(() => {
-				recursiveGetTickets();
-			});
-	}
-
-	recursiveGetTickets();
+			if (responce.stop) {
+				dispatch(stop());
+			}
+		})
+		.catch((error) => {
+			console.log(`Ошибка: ${error}`);
+			dispatch(setError());
+		});
 };
 
 export default ticketsReducer;

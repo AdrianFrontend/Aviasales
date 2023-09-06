@@ -78,7 +78,7 @@ const Filters = ({
 };
 
 Filters.propTypes = {
-	filters: PropTypes.array,
+	filters: PropTypes.object,
 	loading: PropTypes.bool,
 	toggleAll: PropTypes.func,
 	toggleWithoutTransfers: PropTypes.func,

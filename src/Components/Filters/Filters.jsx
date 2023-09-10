@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import "./Filters.scss";
 import PropTypes from "prop-types";
+import Checkbox from "../Checkbox/Checkbox";
 
 const Filters = ({
 	filters,
@@ -29,50 +30,37 @@ const Filters = ({
 		filterTickets(filters);
 	}, [loading]);
 
+	let filtersStatuses = [
+		filters.all,
+		filters.without,
+		filters.oneTransfer,
+		filters.twoTransfers,
+		filters.threeTransfers,
+	];
+	const filtersToggleFunctions = [
+		toggleAll,
+		toggleWithoutTransfers,
+		toggleOneTransfer,
+		toggleTwoTransfers,
+		toggleThreeTransfers,
+	];
+	const filtersTitles = ["Все", "Без пересадок", "1 пересадка", "2 пересадки", "3 пересадки"];
+
+	const filtersJSX = filtersTitles.map((item, idx) => {
+		return (
+			<Checkbox
+				title={item}
+				checked={filtersStatuses[idx]}
+				onChangeFunc={filtersToggleFunctions[idx]}
+				key={idx * Math.random()}
+			/>
+		);
+	});
+
 	return (
 		<div className="Filters">
 			<span className="Filters__title">КОЛИЧЕСТВО ПЕРЕСАДОК</span>
-			<label className="Filters__checkbox">
-				<input type="checkbox" checked={filters.all} onChange={(event) => toggleAll(event.target.checked)} />
-				<span className="Filters__checkbox-custom"></span>
-				<span className="Filters__checkbox-title">Все</span>
-			</label>
-			<label className="Filters__checkbox">
-				<input
-					type="checkbox"
-					checked={filters.without}
-					onChange={(event) => toggleWithoutTransfers(event.target.checked)}
-				/>
-				<span className="Filters__checkbox-custom"></span>
-				<span className="Filters__checkbox-title">Без пересадок</span>
-			</label>
-			<label className="Filters__checkbox">
-				<input
-					type="checkbox"
-					checked={filters.oneTransfer}
-					onChange={(event) => toggleOneTransfer(event.target.checked)}
-				/>
-				<span className="Filters__checkbox-custom"></span>
-				<span className="Filters__checkbox-title">1 пересадка</span>
-			</label>
-			<label className="Filters__checkbox">
-				<input
-					type="checkbox"
-					checked={filters.twoTransfers}
-					onChange={(event) => toggleTwoTransfers(event.target.checked)}
-				/>
-				<span className="Filters__checkbox-custom"></span>
-				<span className="Filters__checkbox-title">2 пересадки</span>
-			</label>
-			<label className="Filters__checkbox">
-				<input
-					type="checkbox"
-					checked={filters.threeTransfers}
-					onChange={(event) => toggleThreeTransfers(event.target.checked)}
-				/>
-				<span className="Filters__checkbox-custom"></span>
-				<span className="Filters__checkbox-title">3 пересадки</span>
-			</label>
+			{filtersJSX}
 		</div>
 	);
 };

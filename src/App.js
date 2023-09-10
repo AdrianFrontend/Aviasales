@@ -7,7 +7,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 function App({ error = false }) {
-	console.log(error);
 	return (
 		<div className="App">
 			<div className="App__header">

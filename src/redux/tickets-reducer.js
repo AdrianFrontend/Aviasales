@@ -28,7 +28,7 @@ const ticketsReducer = (state = initialState, action) => {
 			};
 		}
 		case SORT_TICKETS: {
-			let allTicketsCopy = structuredClone(state.tickets);
+			let allTicketsCopy = [...state.tickets];
 
 			if (action.method === "THE-CHEAPEST") {
 				allTicketsCopy.sort((a, b) => a.price - b.price);
@@ -88,7 +88,6 @@ const ticketsReducer = (state = initialState, action) => {
 					);
 				}
 			}
-
 			return {
 				tickets: state.tickets,
 				sortedTickets: state.sortedTickets,
@@ -124,18 +123,25 @@ const stop = () => ({ type: STOP });
 export const getTicketsThunk = () => async (dispatch) => {
 	const searchId = await API.getSearchId();
 
-	API.getTickets(searchId.searchId)
-		.then((responce) => {
-			dispatch(updateTickets(responce.tickets));
+	const recGetTickets = () => {
+		API.getTickets(searchId.searchId)
+			.then((responce) => {
+				dispatch(updateTickets(responce.tickets, responce.stop));
 
-			if (responce.stop) {
-				dispatch(stop());
-			}
-		})
-		.catch((error) => {
-			console.log(`Ошибка: ${error}`);
-			dispatch(setError());
-		});
+				if (responce.stop) {
+					dispatch(stop());
+					return;
+				}
+
+				recGetTickets();
+			})
+			.catch((error) => {
+				console.log(`Ошибка: ${error}`);
+				recGetTickets();
+			});
+	};
+
+	recGetTickets();
 };
 
 export default ticketsReducer;

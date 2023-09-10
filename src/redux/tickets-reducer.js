@@ -78,7 +78,7 @@ const ticketsReducer = (state = initialState, action) => {
 							: null
 					);
 				}
-				if (action.filters.twoTransfers) {
+				if (action.filters.threeTransfers) {
 					state.sortedTickets.forEach((item) =>
 						item.segments[0].stops.length === 3
 							? filteredTickets.push(item)
